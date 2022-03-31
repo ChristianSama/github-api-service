@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 
+//get all repos from url
 const getRepos = async (url) => {
   let response = await fetch(url);
 
@@ -10,37 +11,27 @@ const getRepos = async (url) => {
   throw new Error(response.status);
 }
 
+//get 5 star repositories from list
 const getFiveStarRepos = (repos) => {
   if (!Array.isArray(repos)) throw new Error('Invalid repos object');
 
-  const filteredRepos = repos.filter(repo => {
-    return repo.stargazers_count >= 5
-  })
-  // map for visibility only
-  .map(repo => ({
-    id: repo.id,
-    name: repo.name,
-    stargazers_count: repo.stargazers_count,
-    updated_at: repo.updated_at
-  }));
+  const filteredRepos = repos.filter(repo => repo.stargazers_count >= 5)
   return filteredRepos;
 }
 
+//get 5 most recently updated repositories from list
 const getLastUpdatedRepos = (repos) => {
   if (!Array.isArray(repos)) throw new Error('Invalid repos object');
-
-  return repos.sort((a, b) => {
-    return new Date(b.updated_at) - new Date(a.updated_at);
-  }).slice(0, 5)
-  //map for visibility only
-  .map(repo => ({
-    id: repo.id,
-    name: repo.name,
-    stargazers_count: repo.stargazers_count,
-    updated_at: repo.updated_at
-  }));
+  sortRepos(repos)
+  .slice(0, 5)
 }
 
+//sort repos list
+const sortRepos = (repos) => {
+  return repos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+}
+
+//get total stars from a list of repositories
 const getTotalStars = (repos) => {
   if (!Array.isArray(repos)) throw new Error('Invalid repos object');
 
@@ -49,15 +40,25 @@ const getTotalStars = (repos) => {
   }, 0);
 }
 
+//for visibility only
+const mapFields = (repos) => {
+  repos.map(repo => ({
+    id: repo.id,
+    name: repo.name,
+    stargazers_count: repo.stargazers_count,
+    updated_at: repo.updated_at
+  }));
+}
+
 const main = async (url) => {
   try {
     const repos = await getRepos(url);
     const fiveStarRepos = getFiveStarRepos(repos);
     console.log('-----REPOSITORIES WITH MORE THAN 5 STARS-----')
-    console.log(fiveStarRepos);
+    console.log(fiveStarRepos.mapFields);
     const lastUpdated = getLastUpdatedRepos(repos)
     console.log('-----LAST FIVE UPDATED REPOSITORIES----')
-    console.log(lastUpdated);
+    console.log(lastUpdated.mapFields);
     const totalStars = getTotalStars(repos);
     console.log('-----SUM OF ALL REPOSITORY STARS----')
     console.log(totalStars);
@@ -66,8 +67,8 @@ const main = async (url) => {
   }
 }
 
-// const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
-// main(sbUrl);
+const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
+main(sbUrl);
 
 module.exports = {
   getRepos,
