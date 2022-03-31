@@ -1,0 +1,1 @@
+Simple App to retrieve repositories information from StackBuilders github
