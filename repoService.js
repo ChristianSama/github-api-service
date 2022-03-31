@@ -16,12 +16,12 @@ const getFiveStarRepos = (repos) => {
     return repo.stargazers_count >= 5
   })
   //map for visibility only
-  .map(repo => ({
-    id: repo.id,
-    name: repo.name,
-    stargazers_count: repo.stargazers_count,
-    updated_at: repo.updated_at
-  }));
+  // .map(repo => ({
+  //   id: repo.id,
+  //   name: repo.name,
+  //   stargazers_count: repo.stargazers_count,
+  //   updated_at: repo.updated_at
+  // }));
   return filteredRepos;
 }
 
@@ -31,12 +31,12 @@ const getLastUpdatedRepos = (repos) => {
     return new Date(b.updated_at) - new Date(a.updated_at);
   }).slice(0, 5)
   //map for visibility only
-  .map(repo => ({
-    id: repo.id,
-    name: repo.name,
-    stargazers_count: repo.stargazers_count,
-    updated_at: repo.updated_at
-  }));
+  // .map(repo => ({
+  //   id: repo.id,
+  //   name: repo.name,
+  //   stargazers_count: repo.stargazers_count,
+  //   updated_at: repo.updated_at
+  // }));
 }
 
 const getTotalStars = (repos) => {
@@ -59,8 +59,8 @@ const main = async (url) => {
   console.log(totalStars);
 }
 
-// const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
-// main(sbUrl);
+const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
+main(sbUrl);
 
 module.exports = {
   getRepos,
