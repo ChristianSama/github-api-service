@@ -55,10 +55,10 @@ const main = async (url) => {
     const repos = await getRepos(url);
     const fiveStarRepos = getFiveStarRepos(repos);
     console.log('-----REPOSITORIES WITH MORE THAN 5 STARS-----')
-    console.log(fiveStarRepos.mapFields);
+    console.log(mapFields(fiveStarRepos));
     const lastUpdated = getLastUpdatedRepos(repos)
     console.log('-----LAST FIVE UPDATED REPOSITORIES----')
-    console.log(lastUpdated.mapFields);
+    console.log(mapFields(lastUpdated));
     const totalStars = getTotalStars(repos);
     console.log('-----SUM OF ALL REPOSITORY STARS----')
     console.log(totalStars);
