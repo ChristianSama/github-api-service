@@ -2,7 +2,8 @@
   "name": "module3_pet_project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "/build/repoService.js",
+  "type": "module",
   "scripts": {
     "test": "jest --coverage"
   },
@@ -10,9 +11,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^17.0.23",
     "jest": "^27.5.1"
   },
   "dependencies": {
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^3.2.3"
   }
 }
