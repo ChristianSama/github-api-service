@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "/build/repoService.js",
-  "type": "module",
   "scripts": {
     "test": "jest --coverage"
   },
@@ -12,9 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^17.0.23",
+    "@types/node-fetch": "^2.6.1",
     "jest": "^27.5.1"
   },
   "dependencies": {
-    "node-fetch": "^3.2.3"
+    "node-fetch": "^2.6.7"
   }
 }

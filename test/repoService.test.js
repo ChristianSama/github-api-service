@@ -1,7 +1,8 @@
-const {getRepos, getFiveStarRepos, getLastUpdatedRepos, getTotalStars} = require('./repoService');
+const {getRepos, getFiveStarRepos, getLastUpdatedRepos, getTotalStars} = require('../build/repoService');
 const fs = require('fs');
+const path = require('path');
 
-let fakeRepos = fs.readFileSync('repos.json');
+let fakeRepos = fs.readFileSync(path.resolve(__dirname,'./repos.json'));
 fakeRepos = JSON.parse(fakeRepos);
 
 describe('getRepos', () => {
@@ -37,13 +38,6 @@ describe('getFiveStarRepos', () => {
       expect(getFiveStarRepos([])).toEqual([])
     })
   })
-  describe('when given an invalid object', () => {
-    test('throws an error', () => {
-      expect(() => {
-        getFiveStarRepos('asdf')
-      }).toThrowError(new Error('Invalid repos object'))
-    })
-  })
 })
 
 describe('getLastUpdatedRepos', () => {
@@ -63,13 +57,6 @@ describe('getLastUpdatedRepos', () => {
       expect(getLastUpdatedRepos([])).toEqual([])
     })
   })
-  describe('when given an invalid object', () => {
-    test('throws an error', () => {
-      expect(() => {
-        getLastUpdatedRepos('asdf')
-      }).toThrowError(new Error('Invalid repos object'))
-    })
-  })
 })
 
 describe('getTotalStars', () => {
@@ -86,13 +73,6 @@ describe('getTotalStars', () => {
   describe('when given a list of repositories with 0 stars', () => {
     test('returns 0', () => {
       expect(getTotalStars(fakeRepos.reposWithoutStars)).toEqual(0)
-    })
-  })
-  describe('when given an invalid object', () => {
-    test('throws an error', () => {
-      expect(() => {
-        getTotalStars('asdf')
-      }).toThrowError(new Error('Invalid repos object'))
     })
   })
 })

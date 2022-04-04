@@ -70,3 +70,8 @@ const main = (url: string) => {
 
 const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
 main(sbUrl);
+
+export {getRepos,
+        getFiveStarRepos,
+        getLastUpdatedRepos, 
+        getTotalStars}
