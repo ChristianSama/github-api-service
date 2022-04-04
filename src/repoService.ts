@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 interface Repository {
   id: number;
@@ -16,62 +16,99 @@ const getRepos = async (url: string) => {
     return repos;
   }
   throw new Error(`${response.status} ${response.statusText}`);
-}
+};
 
 //get 5 star repositories from list
 const getFiveStarRepos = (repos: Array<Repository>) => {
-  const filteredRepos = repos.filter(repo => repo.stargazers_count >= 5)
+  const filteredRepos = repos.filter((repo) => repo.stargazers_count >= 5);
   return filteredRepos;
-}
+};
 
 //get 5 most recently updated repositories from list
 const getLastUpdatedRepos = (repos: Array<Repository>) => {
-  return sortRepos(repos).slice(0, 5)
-}
+  return sortByUpdateDate(repos).slice(0, 5);
+};
 
 //sort repos list
-const sortRepos = (repos: Array<Repository>) => {
-  return repos.sort(
-    (a, b) => (new Date(b.updated_at)).valueOf() - (new Date(a.updated_at)).valueOf());
-}
+const sortByUpdateDate = (repos: Array<Repository>) => {
+  return [...repos].sort(
+    (a, b) =>
+      new Date(b.updated_at).valueOf() - new Date(a.updated_at).valueOf()
+  );
+};
 
 //get total stars from a list of repositories
 const getTotalStars = (repos: Array<Repository>) => {
   return repos.reduce((acc, el) => acc + el.stargazers_count, 0);
-}
+};
+
+//get top 5 repositories with more stars
+const getTopFive = (repos: Array<Repository>) => {
+  return sortByStars(repos).slice(0, 5);
+};
+
+const sortByStars = (repos: Array<Repository>) => {
+  return [...repos].sort((a, b) => b.stargazers_count - a.stargazers_count);
+};
+
+const getReposAlphabeticallyWithoutH = (repos: Array<Repository>) => {
+  return sortAlphabetically(removeReposWithH(repos));
+};
+
+const sortAlphabetically = (repos: Array<Repository>) => {
+  return [...repos].sort((a, b) => a.name.localeCompare(b.name));
+};
+
+const removeReposWithH = (repos: Array<Repository>) => {
+  return repos.filter((repo) => repo.name[0].toLowerCase() !== "h");
+};
 
 //for visibility only
 const mapFields = (repos: Array<Repository>) => {
-  return repos.map(repo => ({
+  return repos.map((repo) => ({
     id: repo.id,
     name: repo.name,
     stargazers_count: repo.stargazers_count,
-    updated_at: repo.updated_at
+    updated_at: repo.updated_at,
   }));
-}
+};
 
 const main = (url: string) => {
   getRepos(url)
-    .then(repos => {
-      const fiveStarRepos = getFiveStarRepos(repos as Array<Repository>);
-      console.log('-----REPOSITORIES WITH MORE THAN 5 STARS-----')
-      console.log(mapFields(fiveStarRepos));
-      const lastUpdated = getLastUpdatedRepos(repos as Array<Repository>)
-      console.log('-----LAST FIVE UPDATED REPOSITORIES----')
-      console.log(mapFields(lastUpdated));
-      const totalStars = getTotalStars(repos as Array<Repository>);
-      console.log('-----SUM OF ALL REPOSITORY STARS----')
-      console.log(totalStars);
-    })
-    .catch(err => {
-      console.error(err);
-    })
-}
+    .then((repos) => {
+      console.log("-----Repositories with more than 5 stars-----");
+      console.log(mapFields(getFiveStarRepos(repos)));
 
-const sbUrl = 'https://api.github.com/orgs/stackbuilders/repos';
+      console.log("-----Last 5 updated repositories-----");
+      console.log(mapFields(getLastUpdatedRepos(repos)));
+
+      console.log("-----Sum of all repository stars-----");
+      console.log(getTotalStars(repos));
+
+      console.log("-----List of top 5 repositories with most stars-----");
+      console.log(mapFields(getTopFive(repos)));
+
+      console.log(
+        "-----List all repositories alphabetically and remove all repositories that start with 'h'-----"
+      );
+      console.log(mapFields(getReposAlphabeticallyWithoutH(repos)));
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+const sbUrl = "https://api.github.com/orgs/stackbuilders/repos";
 main(sbUrl);
 
-export {getRepos,
-        getFiveStarRepos,
-        getLastUpdatedRepos, 
-        getTotalStars}
+export {
+  getRepos,
+  getFiveStarRepos,
+  getLastUpdatedRepos,
+  getTotalStars,
+  getTopFive,
+  sortByStars,
+  getReposAlphabeticallyWithoutH,
+  sortAlphabetically,
+  removeReposWithH,
+};
