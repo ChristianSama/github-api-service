@@ -1,1 +1,1 @@
-Simple App to retrieve repository information using github public API
+App to retrieve repository information using github public API written in typescript.
