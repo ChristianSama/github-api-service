@@ -7,9 +7,13 @@ interface Repository {
   updated_at: Date;
 }
 
+interface HttpClient {
+  get: (str: string) => Promise<any>;
+}
+
 //get all repos from url
-const getRepos = async (url: string) => {
-  let response = await fetch(url);
+const getRepos = async (client: HttpClient, url: string) => {
+  let response = await client.get(url);
 
   if (response.status == 200) {
     let repos = await response.json();
@@ -77,8 +81,17 @@ const mapFields = (repos: Array<Repository>) => {
   }));
 };
 
-const main = (url: string) => {
-  getRepos(url)
+const main = () => {
+
+  const sbUrl = "https://api.github.com/orgs/stackbuilders/repos";
+
+  const myClient: HttpClient = {
+    get: (url: string) => {
+      return fetch(url);
+    }
+  }
+
+  getRepos(myClient, sbUrl)
     .then((repos) => {
       console.log("-----Repositories with more than 5 stars-----");
       console.log(mapFields(getFiveStarRepos(repos)));
@@ -102,8 +115,7 @@ const main = (url: string) => {
     });
 };
 
-const sbUrl = "https://api.github.com/orgs/stackbuilders/repos";
-main(sbUrl);
+main();
 
 export {
   getRepos,

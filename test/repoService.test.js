@@ -15,15 +15,29 @@ const {
 let fakeRepos = fs.readFileSync(path.resolve(__dirname, "./repos.json"));
 fakeRepos = JSON.parse(fakeRepos);
 
+const testClient = {
+  get: (url) => {
+    return new Promise((resolve) => {
+      if (url === "https://api.github.com/orgs/stackbuilders/repos") {
+        resolve({status: 200, 
+                 statusText: "OK",
+                 json: () => {
+                   return Promise.resolve(fakeRepos.repos)
+                 }});
+      }
+    })
+  }
+}
+
 describe("getRepos", () => {
-  describe("when given an invalid URL", () => {
-    test("throws an error", async () => {
-      await expect(
-        getRepos("https://apii.github.com/orgs/stacckbbuilders/repos")
-      ).rejects.toThrowError();
-    });
-  });
-});
+  describe("when given an http client and a url",() => {
+    test("returns a response with a json containing repository data", async () => {
+      const url = "https://api.github.com/orgs/stackbuilders/repos"
+      const data = await getRepos(testClient, url)
+      expect(data).not.toBeNull()
+    })
+  })
+})
 
 describe("getFiveStarRepos", () => {
   describe("when given a list of repositories", () => {
