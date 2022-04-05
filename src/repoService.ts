@@ -47,18 +47,22 @@ const getTopFive = (repos: Array<Repository>) => {
   return sortByStars(repos).slice(0, 5);
 };
 
+//sort repositories by number of stars
 const sortByStars = (repos: Array<Repository>) => {
   return [...repos].sort((a, b) => b.stargazers_count - a.stargazers_count);
 };
 
+//get repositories sorted alphabetically and remove the ones that start with letter 'h'
 const getReposAlphabeticallyWithoutH = (repos: Array<Repository>) => {
   return sortAlphabetically(removeReposWithH(repos));
 };
 
+//sort repositories in alphabetical order
 const sortAlphabetically = (repos: Array<Repository>) => {
   return [...repos].sort((a, b) => a.name.localeCompare(b.name));
 };
 
+//filter out the repositories that start with letter 'h'
 const removeReposWithH = (repos: Array<Repository>) => {
   return repos.filter((repo) => repo.name[0].toLowerCase() !== "h");
 };
